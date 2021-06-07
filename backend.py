@@ -128,6 +128,16 @@ class MyWebService(object):
     @cherrypy.expose
     @cherrypy.tools.json_in()
     @cherrypy.tools.json_out()
+    def info(self, **params):
+        return {"status":"online"}
+
+    @cherrypy.expose
+    def halt(self, **params):
+        cherrypy.engine.exit()
+
+    @cherrypy.expose
+    @cherrypy.tools.json_in()
+    @cherrypy.tools.json_out()
     def annotate(self, sentence=None, index=None):
         try:
             input_json_data = cherrypy.request.json
