@@ -129,3 +129,16 @@ curl -d 'La presidenta de los Estados Unidos tiene mucho poder.' -H "Content-Typ
 curl -X GET http://localhost:8038/annotate?sentence=La%20presidenta%20de%20los%20Estados%20Unidos%20tiene%20mucho%20poder.
 curl -d '{"sentence": "La presidenta de los Estados Unidos tiene mucho poder."}' -H "Content-Type: application/json" -X POST http://localhost:8038/annotate
 ```
+
+# The model
+The model uses the models for token classification from Huggingface Transformers release 3.0.2. (e.g. [XLMRobertaForTokenClassification](https://github.com/huggingface/transformers/blob/v4.3.0-release/src/transformers/models/xlm_roberta/modeling_xlm_roberta.py#L141)). The `forward` function of the model can be found [here](https://github.com/huggingface/transformers/blob/v4.3.0-release/src/transformers/models/xlm_roberta/modeling_xlm_roberta.py#L141): the transformer + dropout + linear.
+
+Some more details about the transforming of the data prior to feeding into the transformer below. The `srl_utils.py` file includes reading of the file data into a format usable by the model. `SRLDataset` inherits from `torch.utils.data.dataset.Dataset`. It takes in a file and processing instructions then calls the corresponding `read_[filetype]_examples_from_directory` function. (Note that these readers are only written for Ontonotes and BETTER input data. If you would like to use this model for another dataset, you will likely need towrite another version of this method for that dataset.) Once examples have been read from `read_[filetype]_examples_from_directory`, they are converted into features using the `convert_examples_to_append_features` function. 
+- the `tokens` from which all inputs are processed is the following sequence: tokenized sentence, separator token(s), tokeniezd predicate, separator token(s)
+- `input_ids` is a [translation of the `tokens` into their corresponding IDs, according to the tokenizer](https://github.com/CogComp/SRL-Spanish/blob/main/srl_utils.py#L447).
+- `attention_mask` is a binary vector the same length as the `input_ids` with [`1` where `input_ids` represents the tokens and `0` elsewhere](https://github.com/CogComp/SRL-Spanish/blob/main/srl_utils.py#L449).
+- `token_type_ids` is a vector that distinguishes [which part of the input corresponds to the sentence part of the tokens, which to the predicate, which to the separators, and which to the padding](https://github.com/CogComp/SRL-Spanish/blob/main/srl_utils.py#L424).
+- `labels` is a vector of the [corresponding IDs of the labels of the `tokens`](https://github.com/CogComp/SRL-Spanish/blob/main/srl_utils.py#L407).
+
+# Contact
+Questions: contact Celine at celine.y.lee@gmail.com
