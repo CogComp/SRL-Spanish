@@ -116,7 +116,7 @@ class TabularView(object):
             # collect stragglers
             if active_tag != "":
                 constituent = {"label": active_tag, "score": 1.0, "start": active_tag_start_idx, "end": len(tags)}
-                relation = {"relationName": active_tag, "srcConstituent": predicate_constituent_idx, "tagetConstituent": len(constituents)}
+                relation = {"relationName": active_tag, "srcConstituent": predicate_constituent_idx, "targetConstituent": len(constituents)}
                 relations.append(relation)
                 constituents.append(constituent)
         view_data = [{"viewType": "", "viewName": view_name, "generator": "multilingual_srl_pipeline", "score": 1.0, "constituents": constituents, "relations": relations}]
