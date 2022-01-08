@@ -120,7 +120,7 @@ Pre-trained models (to go in `model_name_or_path` of predict config files):
 (All of these models preside in `/shared/celinel/transformers-srl`.)
 
 
-## Run Cherrypy Backend (SPANISH SRL)
+## Run Cherrypy Backend (Spanish SRL)
 The cherrypy backend runs the predictor for SRL build off of transformers. Set up the environment and modify the config file and port number as necessary.
 ```
 python backend.py demo_spanish_config.json
