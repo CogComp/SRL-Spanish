@@ -1,4 +1,4 @@
-# SRL-Spanish
+# SRL (Spanish)
 This repository contains the files to run a Huggingface tranformers-based SRL model on the BETTER and Ontonotes datasets.
 
 The design of the models in this repository are based on a BERT + linear layer model used in ['Simple BERT Models for Relation Extraction and Semantic Role Labeling'](https://arxiv.org/pdf/1904.05255.pdf).
