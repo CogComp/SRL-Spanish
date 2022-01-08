@@ -20,10 +20,10 @@ python -m spacy download es_core_news_sm
 
 To run configurations faster and be able to use fp16, download [apex](https://github.com/NVIDIA/apex).
 
-## Configure the SRL model
+## SRL Model Configuration 
 Modify the config.json file to your desired hyperparameters. Currently, the model is configured to train multilingual SRL using Ontonotes-3lang.
 
-### The SRLDataset initialization attributes:
+### SRLDataset Initialization Attributes:
 
 | SRLDataset attribute  | Default value (if any) | Meaning |
 | ------------- | --- | ------------- |
@@ -37,7 +37,7 @@ Modify the config.json file to your desired hyperparameters. Currently, the mode
 | `overwrite_cache` | `False` | Whether or not to overwrite cache. |
 | `metadata` | `{}` | Extra configurations used during trainig. Currently only supports `percentage_english`, `percentage_arabic`, and `percentage_chinese` |
 
-### The config file attributes for training:
+### Config File Attributes for Training:
 
 | Config attribute  | Type | Notes on requirement | Meaning | 
 | --- | --- | --- | --- |
@@ -64,16 +64,16 @@ Modify the config.json file to your desired hyperparameters. Currently, the mode
 | Arguments from [TrainingArguments](https://huggingface.co/transformers/main_classes/trainer.html#transformers.TrainingArguments) | | | Remaining arguments are optional. |
 
 
-## Train the SRL model
+## SRL Model Training
 ```
 . ./set_environment.sh
 python run_srl_cleaned.py config.json
 ```
 
-## Predict with the SRL model
+## Prediction with SRL Model
 The configuration file for predicting with an SRL model is different from that used to train an SRL model. Modify the `predict_config.json` file as needed, according to the following table. 
 
-### The config file attributes for prediction:
+### Config File Attributes for Prediction:
 
 | Config attribute  | Type | Notes on requirement | Meaning | 
 | --- | --- | --- | --- |
@@ -120,7 +120,7 @@ Pre-trained models (to go in `model_name_or_path` of predict config files):
 (All of these models preside in `/shared/celinel/transformers-srl`.)
 
 
-## Run the Cherrypy backend (SPANISH SRL)
+## Run Cherrypy Backend (SPANISH SRL)
 The cherrypy backend runs the predictor for SRL build off of transformers. Set up the environment and modify the config file and port number as necessary.
 ```
 python backend.py demo_spanish_config.json
@@ -133,7 +133,7 @@ curl -X GET http://localhost:8038/annotate?sentence=La%20presidenta%20de%20los%2
 curl -d '{"sentence": "La presidenta de los Estados Unidos tiene mucho poder."}' -H "Content-Type: application/json" -X POST http://localhost:8038/annotate
 ```
 
-## The model
+## About the Model
 The model uses the models for token classification from Huggingface Transformers release 3.0.2. (e.g. [XLMRobertaForTokenClassification](https://github.com/huggingface/transformers/blob/v4.3.0-release/src/transformers/models/xlm_roberta/modeling_xlm_roberta.py#L141)). The `forward` function of the model can be found [here](https://github.com/huggingface/transformers/blob/v4.3.0-release/src/transformers/models/xlm_roberta/modeling_xlm_roberta.py#L141): the transformer + dropout + linear.
 
 Some more details about the transforming of the data prior to feeding into the transformer below. The `srl_utils.py` file includes reading of the file data into a format usable by the model. `SRLDataset` inherits from `torch.utils.data.dataset.Dataset`. It takes in a file and processing instructions then calls the corresponding `read_[filetype]_examples_from_directory` function. (Note that these readers are only written for Ontonotes and BETTER input data. If you would like to use this model for another dataset, you will likely need towrite another version of this method for that dataset.) Once examples have been read from `read_[filetype]_examples_from_directory`, they are converted into features using the `convert_examples_to_append_features` function. 
@@ -144,4 +144,5 @@ Some more details about the transforming of the data prior to feeding into the t
 - `labels` is a vector of the [corresponding IDs of the labels of the `tokens`](https://github.com/CogComp/SRL-Spanish/blob/main/srl_utils.py#L407).
 
 ## Contact
-Questions: contact Celine at celine.y.lee@gmail.com
+For any question regarding this repository please contact author: <br/>
+Celine at celine.y.lee@gmail.com
