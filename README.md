@@ -1,3 +1,5 @@
+[Trained models can be downloaded from Huggingface] (https://huggingface.co/Yuqian/Celine_SRL/tree/main).
+
 # SRL (Spanish)
 This repository contains the files to run a Huggingface tranformers-based SRL model on the BETTER and Ontonotes datasets.
 
